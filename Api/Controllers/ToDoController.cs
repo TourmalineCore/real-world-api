@@ -14,6 +14,8 @@ namespace Api.Controllers;
 [Route("to-dos-api")]
 public class ToDoController : Controller
 {
+    private const long DEFAULT_TENANT_ID = 1L;
+
     private readonly ToDoService _toDoService;
     private readonly IGetAllToDosQuery _getAllToDosQuery;
     private readonly ICreateToDoCommand _createToDoCommand;
@@ -44,7 +46,7 @@ public class ToDoController : Controller
     [HttpGet("to-dos")]
     public async Task<ToDosResponse> GetAllToDosAsync()
     {
-        var toDos = await _getAllToDosQuery.GetAllAsync();
+        var toDos = await _getAllToDosQuery.GetAllAsync(DEFAULT_TENANT_ID);
         return new ToDosResponse
         {
             ToDos = toDos.Select(x => new ToDo { Id = x.Id, Name = x.Name }).ToList()
@@ -58,7 +60,7 @@ public class ToDoController : Controller
     [HttpPost("to-dos")]
     public Task<long> AddToDoAsync([FromBody] AddToDoRequest addToDoRequest)
     {
-        return _createToDoCommand.CreateAsync(addToDoRequest);
+        return _createToDoCommand.CreateAsync(addToDoRequest, DEFAULT_TENANT_ID);
     }
 
     /// <summary>
@@ -68,7 +70,7 @@ public class ToDoController : Controller
     [HttpPost("to-dos/complete")]
     public Task CompleteToDo([FromBody] CompleteToDoRequest completeToDoRequest)
     {
-        return _toDoService.CompleteToDoAsync(completeToDoRequest.ToDoIds);
+        return _toDoService.CompleteToDoAsync(completeToDoRequest.ToDoIds, DEFAULT_TENANT_ID);
     }
 
     /// <summary>
@@ -78,7 +80,7 @@ public class ToDoController : Controller
     [HttpDelete("to-dos")]
     public Task DeleteToDo([Required][FromQuery] long toDoId)
     {
-        return _deleteToDoCommand.DeleteAsync(toDoId);
+        return _deleteToDoCommand.DeleteAsync(toDoId, DEFAULT_TENANT_ID);
     }
 
     /// <summary>
@@ -88,6 +90,6 @@ public class ToDoController : Controller
     [HttpDelete("to-dos/soft-delete")]
     public Task SoftDeleteToDo([FromQuery] long toDoId)
     {
-        return _softDeleteToDoCommand.SoftDeleteAsync(toDoId);
+        return _softDeleteToDoCommand.SoftDeleteAsync(toDoId, DEFAULT_TENANT_ID);
     }
 }

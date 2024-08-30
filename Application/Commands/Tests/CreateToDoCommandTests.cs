@@ -27,14 +27,16 @@ namespace Application.Commands.Tests
         [Fact]
         public async Task CreateAsync_ShouldAddNewToDoToDbSet()
         {
+            var tenantId = 1L;
             var addToDoRequest = new AddToDoRequest { Name = "Test ToDo" };
 
-            var toDoId = await _command.CreateAsync(addToDoRequest);
+            var toDoId = await _command.CreateAsync(addToDoRequest, tenantId);
 
             var toDo = await _context.ToDos.FindAsync(toDoId);
             Assert.NotNull(toDo);
             Assert.Equal("Test ToDo", toDo.Name);
             Assert.Equal(toDoId, toDo.Id);
+            Assert.Equal(tenantId, toDo.TenantId);
         }
     }
 }

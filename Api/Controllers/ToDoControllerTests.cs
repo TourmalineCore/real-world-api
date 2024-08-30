@@ -37,13 +37,14 @@ namespace Api.Controllers
         [Fact]
         public async Task GetAllToDosAsync_ShouldReturnToDosResponse()
         {
+            var tenantId = 1L;
             var toDoItems = new List<Core.Entities.ToDo>
             {
-                new () { Id = 1, Name = "Test ToDo 1" },
-                new()  { Id = 2, Name = "Test ToDo 2" }
+                new () { Id = 1, Name = "Test ToDo 1", TenantId = 1L },
+                new()  { Id = 2, Name = "Test ToDo 2", TenantId = 1L }
             };
             _getAllToDosQueryMock
-                .Setup(query => query.GetAllAsync())
+                .Setup(query => query.GetAllAsync(tenantId))
                 .ReturnsAsync(toDoItems);
 
             var result = await _controller.GetAllToDosAsync();
@@ -51,41 +52,43 @@ namespace Api.Controllers
             Assert.IsType<ToDosResponse>(result);
             Assert.Equal(2, result.ToDos.Count);
             Assert.Equal("Test ToDo 1", result.ToDos[0].Name);
-            _getAllToDosQueryMock.Verify(query => query.GetAllAsync(), Times.Once);
+            _getAllToDosQueryMock.Verify(query => query.GetAllAsync(tenantId), Times.Once);
         }
 
         [Fact]
         public async Task AddToDoAsync_ShouldReturnCreatedToDoId()
         {
+            var tenantId = 1L;
             var request = new AddToDoRequest { Name = "New ToDo" };
             _createToDoCommandMock
-                .Setup(command => command.CreateAsync(request))
+                .Setup(command => command.CreateAsync(request, tenantId))
                 .ReturnsAsync(1);
 
             var result = await _controller.AddToDoAsync(request);
 
             Assert.Equal(1, result);
-            _createToDoCommandMock.Verify(command => command.CreateAsync(request), Times.Once);
+            _createToDoCommandMock.Verify(command => command.CreateAsync(request, tenantId), Times.Once);
         }
 
         [Fact]
         public async Task CompleteToDo_ShouldCallCompleteToDoAsync()
         {
+            var tenantId = 1L;
             var request = new CompleteToDoRequest { ToDoIds = new List<long> { 1, 2 } };
 
             await _controller.CompleteToDo(request);
 
-            _toDoServiceMock.Verify(service => service.CompleteToDoAsync(request.ToDoIds), Times.Once);
+            _toDoServiceMock.Verify(service => service.CompleteToDoAsync(request.ToDoIds, tenantId), Times.Once);
         }
 
         [Fact]
         public async Task DeleteToDo_ShouldCallDeleteAsync()
         {
             var toDoId = 1L;
-
+            var tenantId = 1L;
             await _controller.DeleteToDo(toDoId);
 
-            _deleteToDoCommandMock.Verify(command => command.DeleteAsync(toDoId), Times.Once);
+            _deleteToDoCommandMock.Verify(command => command.DeleteAsync(toDoId, tenantId), Times.Once);
         }
 
     }

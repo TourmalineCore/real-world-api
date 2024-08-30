@@ -16,9 +16,12 @@ namespace Application.Commands
             _clock = clock;
         }
 
-        public async Task SoftDeleteAsync(long id)
+        public async Task SoftDeleteAsync(long id, long tenantId)
         {
-            var toDo = await _context.ToDos.Where(x => x.Id == id).SingleAsync();
+            var toDo = await _context
+                .ToDos
+                .Where(x => x.Id == id && x.TenantId == tenantId)
+                .SingleAsync();
             toDo.DeletedAtUtc = _clock.GetCurrentInstant().ToDateTimeUtc();
             _context.ToDos.Update(toDo);
             await _context.SaveChangesAsync();

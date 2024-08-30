@@ -22,13 +22,25 @@ public class DeleteToDoCommandTests
     [Fact]
     public async Task DeleteAsync_ShouldRemoveToDoFromDbSet()
     {
-        var toDo = new ToDo { Id = 1, Name = "Test ToDo" };
+        var tenantId = 1L;
+        var toDo = new ToDo { Id = 1, Name = "Test ToDo", TenantId = 1L };
         _context.ToDos.Add(toDo);
         await _context.SaveChangesAsync();
 
-        await _command.DeleteAsync(toDo.Id);
+        await _command.DeleteAsync(toDo.Id, tenantId);
 
         var deletedToDo = await _context.ToDos.FindAsync(toDo.Id);
         Assert.Null(deletedToDo);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_ShouldntRemoveToDoFromDbSet_IfItIsInAnotherTenant()
+    {
+        var tenantId = 2L;
+        var toDo = new ToDo { Id = 2, Name = "Test ToDo", TenantId = 1L };
+        _context.ToDos.Add(toDo);
+        await _context.SaveChangesAsync();
+        
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _command.DeleteAsync(toDo.Id, tenantId));
     }
 }

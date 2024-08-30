@@ -27,17 +27,32 @@ public class SoftDeleteToDoCommandTests
     [Fact]
     public async Task SoftDeleteAsync_ShouldSetDeletedAtUtc()
     {
+        var tenantId = 1L;
         var currentInstant = Instant.FromUtc(2024, 8, 28, 12, 0, 0);
         _clockMock.Setup(c => c.GetCurrentInstant()).Returns(currentInstant);
 
-        var toDo = new ToDo { Id = 1, Name = "Test ToDo", DeletedAtUtc = null };
+        var toDo = new ToDo { Id = 1, Name = "Test ToDo", DeletedAtUtc = null, TenantId = 1L };
         _context.ToDos.Add(toDo);
         await _context.SaveChangesAsync();
 
-        await _command.SoftDeleteAsync(toDo.Id);
+        await _command.SoftDeleteAsync(toDo.Id, tenantId);
 
         var updatedToDo = await _context.ToDos.FindAsync(toDo.Id);
         Assert.NotNull(updatedToDo);
         Assert.Equal(currentInstant.ToDateTimeUtc(), updatedToDo.DeletedAtUtc);
+    }
+
+    [Fact]
+    public async Task SoftDeleteAsync_ShouldntSetDeletedAtUtc__IfItIsInAnotherTenant()
+    {
+        var tenantId = 2L;
+        var currentInstant = Instant.FromUtc(2024, 8, 28, 12, 0, 0);
+        _clockMock.Setup(c => c.GetCurrentInstant()).Returns(currentInstant);
+
+        var toDo = new ToDo { Id = 2, Name = "Test ToDo 1", DeletedAtUtc = null, TenantId = 1L };
+        _context.ToDos.Add(toDo);
+        await _context.SaveChangesAsync();
+
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _command.SoftDeleteAsync(toDo.Id, tenantId));
     }
 }

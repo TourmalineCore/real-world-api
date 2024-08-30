@@ -2,5 +2,5 @@ namespace Application.Commands.Contracts;
 
 public interface ISoftDeleteToDoCommand
 {
-    Task SoftDeleteAsync(long id);
+    Task SoftDeleteAsync(long id, long tenantId);
 }

@@ -12,11 +12,11 @@ namespace Application.Services
 
         // For tests
         public ToDoService() { }
-        public virtual async Task CompleteToDoAsync(List<long> toDoIds)
+        public virtual async Task CompleteToDoAsync(List<long> toDoIds, long tenantId)
         {
             foreach (var toDoId in toDoIds)
             {
-                await _deleteToDoCommand.DeleteAsync(toDoId);
+                await _deleteToDoCommand.DeleteAsync(toDoId, tenantId);
             }
         }
     }

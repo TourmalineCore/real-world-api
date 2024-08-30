@@ -16,9 +16,9 @@ namespace Application.Commands
             _clock = clock;
         }
 
-        public async Task<long> CreateAsync(AddToDoRequest addToDoRequest)
+        public async Task<long> CreateAsync(AddToDoRequest addToDoRequest, long tenantId)
         {
-            var toDo = new ToDo(addToDoRequest.Name, _clock);
+            var toDo = new ToDo(addToDoRequest.Name, _clock, tenantId);
             await _context.ToDos.AddAsync(toDo);
             await _context.SaveChangesAsync();
             return toDo.Id;

@@ -12,10 +12,13 @@ namespace Core.Entities
         public DateTime CreatedAtUtc { get; set; }
         public DateTime? DeletedAtUtc { get; set; }
 
-        public ToDo(string name, IClock clock)
+        public long TenantId { get; set; }
+
+        public ToDo(string name, IClock clock, long tenantId)
         {
             Name = name;
             CreatedAtUtc = clock.GetCurrentInstant().ToDateTimeUtc();
+            TenantId = tenantId;
         }
 
         public ToDo()

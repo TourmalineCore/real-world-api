@@ -12,9 +12,12 @@ namespace Application.Commands
             _context = context;
         }
 
-        public async Task DeleteAsync(long id)
+        public async Task DeleteAsync(long id, long tenantId)
         {
-            var toDo = await _context.ToDos.Where(x => x.Id == id).SingleAsync();
+            var toDo = await _context
+                .ToDos
+                .Where(x => x.Id == id && x.TenantId == tenantId)
+                .SingleAsync();
             _context.ToDos.Remove(toDo);
             await _context.SaveChangesAsync();
         }

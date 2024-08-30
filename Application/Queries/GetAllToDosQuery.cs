@@ -11,9 +11,12 @@ namespace Application.Queries
         {
             _context = context;
         }
-        public async Task<List<ToDo>> GetAllAsync()
+        public async Task<List<ToDo>> GetAllAsync(long tenantId)
         {
-            var toDoList = await _context.ToDos.ToListAsync();
+            var toDoList = await _context
+                .ToDos
+                .Where(x => x.TenantId == tenantId)
+                .ToListAsync();
             return toDoList;
         }
     }

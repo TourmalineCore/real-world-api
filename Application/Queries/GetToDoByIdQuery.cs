@@ -11,10 +11,10 @@ namespace Application.Queries
         {
             _context = context;
         }
-        public async Task<ToDo> GetByIdAsync(long id)
+        public async Task<ToDo> GetByIdAsync(long id, long tenantId)
         {
             var toDo = await _context.ToDos
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == id && x.TenantId == tenantId)
                 .SingleOrDefaultAsync();
             return toDo;
         }
