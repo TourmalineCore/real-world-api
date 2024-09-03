@@ -7,7 +7,7 @@ namespace TracingLibrary;
 public class AttributeContext
 {
     public AttributeContext(
-        Activity activity, 
+        Activity activity,
         HttpContext context
     )
     {

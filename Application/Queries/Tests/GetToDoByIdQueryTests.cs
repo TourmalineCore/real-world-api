@@ -1,8 +1,8 @@
-using Xunit;
 using Application;
 using Application.Queries;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using Xunit;
 
 public class GetToDoByIdQueryTests
 {
@@ -23,7 +23,7 @@ public class GetToDoByIdQueryTests
     public async Task GetByIdAsync_ShouldReturnToDo_WhenToDoExists()
     {
         var tenantId = 1;
-        var toDo = new ToDo { Id = 1, Name = "Test ToDo", TenantId = 1};
+        var toDo = new ToDo { Id = 1, Name = "Test ToDo", TenantId = 1 };
         _context.ToDos.Add(toDo);
         await _context.SaveChangesAsync();
 

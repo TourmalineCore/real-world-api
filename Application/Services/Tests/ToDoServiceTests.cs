@@ -1,7 +1,7 @@
-using Xunit;
-using Moq;
 using Application.Commands.Contracts;
 using Application.Services;
+using Moq;
+using Xunit;
 
 public class ToDoServiceTests
 {
@@ -16,7 +16,7 @@ public class ToDoServiceTests
 
         await toDoService.CompleteToDoAsync(toDoIds, tenantId);
 
-        foreach(var toDoId in toDoIds)
+        foreach (var toDoId in toDoIds)
         {
             deleteToDoCommandMock.Verify(m => m.DeleteAsync(toDoId, tenantId), Times.Once);
         }

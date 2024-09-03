@@ -18,7 +18,7 @@ public class TracingAttribute : ActionFilterAttribute
     }
 
     public override async Task OnActionExecutionAsync(
-        ActionExecutingContext context, 
+        ActionExecutingContext context,
         ActionExecutionDelegate next
     )
     {
@@ -28,16 +28,16 @@ public class TracingAttribute : ActionFilterAttribute
         .OfType<NoTracingAttribute>()
         .Any();
 
-        if(noTracing)
+        if (noTracing)
         {
             await next();
             return;
         }
 
-        if(Activity.Current != null)
+        if (Activity.Current != null)
         {
             var headers = new AttributeContext(
-                activity: Activity.Current, 
+                activity: Activity.Current,
                 context: context.HttpContext
             );
 
@@ -50,9 +50,9 @@ public class TracingAttribute : ActionFilterAttribute
 
         var executedContext = await next();
 
-        if(executedContext.Exception != null && !executedContext.ExceptionHandled)
+        if (executedContext.Exception != null && !executedContext.ExceptionHandled)
         {
-            if(Activity.Current != null)
+            if (Activity.Current != null)
             {
                 Activity.Current.AddTag("ErrorStackTrace", executedContext.Exception.StackTrace);
                 Activity.Current.RecordException(executedContext.Exception);

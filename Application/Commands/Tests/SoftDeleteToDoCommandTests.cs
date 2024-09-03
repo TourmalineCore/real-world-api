@@ -1,10 +1,10 @@
-using Xunit;
-using Moq;
 using Application;
 using Application.Commands;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using NodaTime;
+using Xunit;
 
 public class SoftDeleteToDoCommandTests
 {

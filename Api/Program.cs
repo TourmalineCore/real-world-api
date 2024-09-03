@@ -24,7 +24,7 @@ var elasticSearchOptions = configuration
 // add logging
 builder.Services.AddScoped(_ => new LoggingAttribute("Api"));
 ElkLogger.SetupLogger(
-    elasticSearchOptions.ElasticSearchUrl, 
+    elasticSearchOptions.ElasticSearchUrl,
     elasticSearchOptions.ElasticSearchLogin,
     elasticSearchOptions.ElasticSearchPassword);
 

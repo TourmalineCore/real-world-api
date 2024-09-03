@@ -7,7 +7,7 @@ namespace LoggingLibrary;
 public class AttributeContext
 {
     public AttributeContext(
-        Activity activity, 
+        Activity activity,
         HttpContext context
     )
     {
@@ -22,6 +22,6 @@ public class AttributeContext
     public string SpanId { get; set; }
 
     public string ParentSpanId { get; set; }
-    
+
     public string SentryTraceHeader { get; set; }
 }

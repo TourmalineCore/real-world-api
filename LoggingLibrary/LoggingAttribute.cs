@@ -18,7 +18,7 @@ public class LoggingAttribute : ActionFilterAttribute
     }
 
     public override async Task OnActionExecutionAsync(
-        ActionExecutingContext context, 
+        ActionExecutingContext context,
         ActionExecutionDelegate next
     )
     {
@@ -28,14 +28,14 @@ public class LoggingAttribute : ActionFilterAttribute
         .OfType<NoLoggingAttribute>()
         .Any();
 
-        if(noLogging)
+        if (noLogging)
         {
             await next();
             return;
         }
 
         var headers = new AttributeContext(Activity.Current, context.HttpContext);
-        using(LogContext.PushProperty("SentryTrace", headers.SentryTraceHeader))
+        using (LogContext.PushProperty("SentryTrace", headers.SentryTraceHeader))
 
         {
             await next();

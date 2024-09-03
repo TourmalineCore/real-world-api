@@ -1,8 +1,8 @@
-using Xunit;
 using Application;
 using Application.Commands;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using Xunit;
 
 public class DeleteToDoCommandTests
 {
@@ -40,7 +40,7 @@ public class DeleteToDoCommandTests
         var toDo = new ToDo { Id = 2, Name = "Test ToDo", TenantId = 1L };
         _context.ToDos.Add(toDo);
         await _context.SaveChangesAsync();
-        
+
         await Assert.ThrowsAsync<InvalidOperationException>(async () => await _command.DeleteAsync(toDo.Id, tenantId));
     }
 }

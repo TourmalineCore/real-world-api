@@ -15,12 +15,12 @@ public class UtcEcsTextFormatterTests
         var dummyElasticSearchPassword = "test_password";
 
         ElkLogger.SetupLogger(
-            dummyElasticSearchUri, 
-            dummyElasticSearchLogin, 
+            dummyElasticSearchUri,
+            dummyElasticSearchLogin,
             dummyElasticSearchPassword
         );
 
-        using(TestCorrelator.CreateContext())
+        using (TestCorrelator.CreateContext())
         {
             Log.Information("Test message");
         }

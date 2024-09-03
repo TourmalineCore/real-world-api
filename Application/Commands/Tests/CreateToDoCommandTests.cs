@@ -1,8 +1,8 @@
-using Xunit;
-using Moq;
 using Application.Requests;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using NodaTime;
+using Xunit;
 
 namespace Application.Commands.Tests
 {

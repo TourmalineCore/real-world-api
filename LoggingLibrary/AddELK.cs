@@ -43,7 +43,7 @@ public static class ElkLogger
 public class UtcEcsTextFormatter : EcsTextFormatter
 {
     public override void Format(
-        LogEvent logEvent, 
+        LogEvent logEvent,
         TextWriter output
     )
     {
@@ -59,7 +59,7 @@ public class UtcEcsTextFormatter : EcsTextFormatter
             logEvent.MessageTemplate,
             properties);
 
-        using(var sw = new StringWriter())
+        using (var sw = new StringWriter())
         {
             base.Format(utcLogEvent, sw);
             var formattedMessage = sw.ToString();
