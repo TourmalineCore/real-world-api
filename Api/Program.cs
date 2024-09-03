@@ -1,17 +1,55 @@
 using System.Reflection;
 using Api.Exceptions;
+using Api.Options;
 using Application;
 using Core;
+using Elastic.CommonSchema;
+using LoggingLibrary;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NodaTime;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
+// configure ElasticSearch credentials
+builder.Services.Configure<ElasticSearchOptions>(configuration.GetSection("ElasticSearchOptions"));
+var elasticSearchOptions = configuration
+    .GetSection(nameof(ElasticSearchOptions))
+    .Get<ElasticSearchOptions>();
+
+// add logging
+builder.Services.AddScoped(_ => new LoggingAttribute("Api"));
+ElkLogger.SetupLogger(
+    elasticSearchOptions.ElasticSearchUrl, 
+    elasticSearchOptions.ElasticSearchLogin,
+    elasticSearchOptions.ElasticSearchPassword);
+
 builder.Services.AddControllers(opt => { opt.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>(); });
 
+// add tracing
+builder.Services.AddOpenTelemetry()
+    .WithTracing(builder =>
+    {
+        builder
+            .AddSource("Logs.Startup")
+            .SetSampler(new AlwaysOnSampler())
+            .SetResourceBuilder(
+                ResourceBuilder
+                    .CreateDefault()
+                    .AddService("OpenTelemetry.RampUp.Api.*", serviceVersion: "0.0.1"))
+            .AddAspNetCoreInstrumentation()
+            .AddJaegerExporter(o =>
+            {
+                o.AgentHost = Environment.GetEnvironmentVariable("JAEGER_HOST") ?? "localhost";
+                o.AgentPort = int.TryParse(Environment.GetEnvironmentVariable("JAEGER_PORT"), out var port) ? port : 6831;
+            })
+
+            .AddConsoleExporter();
+    });
 builder.Services.AddCors();
 builder.Services.AddEndpointsApiExplorer();
 

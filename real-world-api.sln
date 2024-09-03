@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{21C0025E-33AD-4FB4-9AA1-E1705350D2D5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoggingLibrary", "LoggingLibrary\LoggingLibrary.csproj", "{F5DB1A66-15E6-49F0-B427-60213DB77E7E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TracingLibrary", "TracingLibrary\TracingLibrary.csproj", "{47941D9E-F759-419F-B6E4-6C8D5F63ED45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{21C0025E-33AD-4FB4-9AA1-E1705350D2D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21C0025E-33AD-4FB4-9AA1-E1705350D2D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21C0025E-33AD-4FB4-9AA1-E1705350D2D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5DB1A66-15E6-49F0-B427-60213DB77E7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5DB1A66-15E6-49F0-B427-60213DB77E7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5DB1A66-15E6-49F0-B427-60213DB77E7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5DB1A66-15E6-49F0-B427-60213DB77E7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47941D9E-F759-419F-B6E4-6C8D5F63ED45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47941D9E-F759-419F-B6E4-6C8D5F63ED45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47941D9E-F759-419F-B6E4-6C8D5F63ED45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47941D9E-F759-419F-B6E4-6C8D5F63ED45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
