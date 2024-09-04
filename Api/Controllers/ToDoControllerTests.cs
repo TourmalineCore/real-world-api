@@ -1,8 +1,10 @@
+using System.Security.Claims;
 using Api.Responses;
 using Application.Commands.Contracts;
 using Application.Queries.Contracts;
 using Application.Requests;
 using Application.Services;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 using ToDo = Core.Entities.ToDo;
@@ -33,6 +35,21 @@ namespace Api.Controllers
                     _deleteToDoCommandMock.Object,
                     _softDeleteToDoCommandMock.Object
                 );
+
+            var claims = new List<Claim>
+            {
+                new Claim("tenantId", "1")
+            };
+            var identity = new ClaimsIdentity(claims, "TestAuthType");
+            var user = new ClaimsPrincipal(identity);
+
+            var httpContext = new Mock<HttpContext>();
+            httpContext.Setup(x => x.User).Returns(user);
+
+            _controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext.Object
+            };
         }
 
         [Fact]

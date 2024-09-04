@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Api.Extensions;
 using Api.Responses;
 using Application.Commands.Contracts;
 using Application.Queries.Contracts;
@@ -49,7 +50,7 @@ public class ToDoController : Controller
     [HttpGet("to-dos")]
     public async Task<ToDosResponse> GetAllToDosAsync()
     {
-        var toDos = await _getAllToDosQuery.GetAllAsync(DEFAULT_TENANT_ID);
+        var toDos = await _getAllToDosQuery.GetAllAsync(User.GetTenantId());
 
         return new ToDosResponse
         {
@@ -70,7 +71,7 @@ public class ToDoController : Controller
     [HttpPost("to-dos")]
     public Task<long> AddToDoAsync([FromBody] AddToDoRequest addToDoRequest)
     {
-        return _createToDoCommand.CreateAsync(addToDoRequest, DEFAULT_TENANT_ID);
+        return _createToDoCommand.CreateAsync(addToDoRequest, User.GetTenantId());
     }
 
     /// <summary>
@@ -80,7 +81,7 @@ public class ToDoController : Controller
     [HttpPost("to-dos/complete")]
     public Task CompleteToDo([FromBody] CompleteToDoRequest completeToDoRequest)
     {
-        return _toDoService.CompleteToDoAsync(completeToDoRequest.ToDoIds, DEFAULT_TENANT_ID);
+        return _toDoService.CompleteToDoAsync(completeToDoRequest.ToDoIds, User.GetTenantId());
     }
 
     /// <summary>
@@ -90,7 +91,7 @@ public class ToDoController : Controller
     [HttpDelete("to-dos")]
     public Task DeleteToDo([Required] [FromQuery] long toDoId)
     {
-        return _deleteToDoCommand.DeleteAsync(toDoId, DEFAULT_TENANT_ID);
+        return _deleteToDoCommand.DeleteAsync(toDoId, User.GetTenantId());
     }
 
     /// <summary>
@@ -100,6 +101,6 @@ public class ToDoController : Controller
     [HttpDelete("to-dos/soft-delete")]
     public Task SoftDeleteToDo([FromQuery] long toDoId)
     {
-        return _softDeleteToDoCommand.SoftDeleteAsync(toDoId, DEFAULT_TENANT_ID);
+        return _softDeleteToDoCommand.SoftDeleteAsync(toDoId, User.GetTenantId());
     }
 }
