@@ -1,5 +1,4 @@
 using System.Diagnostics;
-
 using Microsoft.AspNetCore.Http;
 
 namespace LoggingLibrary;
@@ -8,8 +7,7 @@ public class AttributeContext
 {
     public AttributeContext(
         Activity activity,
-        HttpContext context
-    )
+        HttpContext context)
     {
         TraceId = activity.TraceId.ToString();
         SpanId = activity.SpanId.ToString();

@@ -23,7 +23,13 @@ public class GetToDoByIdQueryTests
     public async Task GetByIdAsync_ShouldReturnToDo_WhenToDoExists()
     {
         var tenantId = 1;
-        var toDo = new ToDo { Id = 1, Name = "Test ToDo", TenantId = 1 };
+
+        var toDo = new ToDo
+        {
+            Id = 1,
+            Name = "Test ToDo",
+            TenantId = 1,
+        };
         _context.ToDos.Add(toDo);
         await _context.SaveChangesAsync();
 
@@ -49,9 +55,27 @@ public class GetToDoByIdQueryTests
     public async Task GetByIdAsync_ShouldntReturnToDo_WhenToDoExistsInAnotherTenant()
     {
         var tenantId = 1;
-        var toDo = new ToDo { Id = 2, Name = "Test ToDo", TenantId = 1L };
-        var toDo1 = new ToDo { Id = 3, Name = "Test ToDo", TenantId = 2L };
-        var toDo2 = new ToDo { Id = 4, Name = "Test ToDo", TenantId = 1L };
+
+        var toDo = new ToDo
+        {
+            Id = 2,
+            Name = "Test ToDo",
+            TenantId = 1L,
+        };
+
+        var toDo1 = new ToDo
+        {
+            Id = 3,
+            Name = "Test ToDo",
+            TenantId = 2L,
+        };
+
+        var toDo2 = new ToDo
+        {
+            Id = 4,
+            Name = "Test ToDo",
+            TenantId = 1L,
+        };
         _context.ToDos.Add(toDo);
         _context.ToDos.Add(toDo1);
         _context.ToDos.Add(toDo2);

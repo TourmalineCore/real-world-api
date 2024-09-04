@@ -23,7 +23,13 @@ public class DeleteToDoCommandTests
     public async Task DeleteAsync_ShouldRemoveToDoFromDbSet()
     {
         var tenantId = 1L;
-        var toDo = new ToDo { Id = 1, Name = "Test ToDo", TenantId = 1L };
+
+        var toDo = new ToDo
+        {
+            Id = 1,
+            Name = "Test ToDo",
+            TenantId = 1L,
+        };
         _context.ToDos.Add(toDo);
         await _context.SaveChangesAsync();
 
@@ -37,7 +43,13 @@ public class DeleteToDoCommandTests
     public async Task DeleteAsync_ShouldntRemoveToDoFromDbSet_IfItIsInAnotherTenant()
     {
         var tenantId = 2L;
-        var toDo = new ToDo { Id = 2, Name = "Test ToDo", TenantId = 1L };
+
+        var toDo = new ToDo
+        {
+            Id = 2,
+            Name = "Test ToDo",
+            TenantId = 1L,
+        };
         _context.ToDos.Add(toDo);
         await _context.SaveChangesAsync();
 

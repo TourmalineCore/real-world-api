@@ -21,6 +21,7 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
+
         modelBuilder.Entity<ToDo>()
             .Property(f => f.Id)
             .ValueGeneratedOnAdd();

@@ -5,6 +5,7 @@ using Application.Requests;
 using Application.Services;
 using Moq;
 using Xunit;
+using ToDo = Core.Entities.ToDo;
 
 namespace Api.Controllers
 {
@@ -26,23 +27,35 @@ namespace Api.Controllers
             _toDoServiceMock = new Mock<ToDoService>(new Mock<IDeleteToDoCommand>().Object);
 
             _controller = new ToDoController(
-                _toDoServiceMock.Object,
-                _getAllToDosQueryMock.Object,
-                _createToDoCommandMock.Object,
-                _deleteToDoCommandMock.Object,
-                _softDeleteToDoCommandMock.Object
-            );
+                    _toDoServiceMock.Object,
+                    _getAllToDosQueryMock.Object,
+                    _createToDoCommandMock.Object,
+                    _deleteToDoCommandMock.Object,
+                    _softDeleteToDoCommandMock.Object
+                );
         }
 
         [Fact]
         public async Task GetAllToDosAsync_ShouldReturnToDosResponse()
         {
             var tenantId = 1L;
-            var toDoItems = new List<Core.Entities.ToDo>
+
+            var toDoItems = new List<ToDo>
             {
-                new () { Id = 1, Name = "Test ToDo 1", TenantId = 1L },
-                new()  { Id = 2, Name = "Test ToDo 2", TenantId = 1L }
+                new()
+                {
+                    Id = 1,
+                    Name = "Test ToDo 1",
+                    TenantId = 1L,
+                },
+                new()
+                {
+                    Id = 2,
+                    Name = "Test ToDo 2",
+                    TenantId = 1L,
+                },
             };
+
             _getAllToDosQueryMock
                 .Setup(query => query.GetAllAsync(tenantId))
                 .ReturnsAsync(toDoItems);
@@ -59,7 +72,12 @@ namespace Api.Controllers
         public async Task AddToDoAsync_ShouldReturnCreatedToDoId()
         {
             var tenantId = 1L;
-            var request = new AddToDoRequest { Name = "New ToDo" };
+
+            var request = new AddToDoRequest
+            {
+                Name = "New ToDo",
+            };
+
             _createToDoCommandMock
                 .Setup(command => command.CreateAsync(request, tenantId))
                 .ReturnsAsync(1);
@@ -74,7 +92,15 @@ namespace Api.Controllers
         public async Task CompleteToDo_ShouldCallCompleteToDoAsync()
         {
             var tenantId = 1L;
-            var request = new CompleteToDoRequest { ToDoIds = new List<long> { 1, 2 } };
+
+            var request = new CompleteToDoRequest
+            {
+                ToDoIds = new List<long>
+                {
+                    1,
+                    2,
+                },
+            };
 
             await _controller.CompleteToDo(request);
 
@@ -90,6 +116,5 @@ namespace Api.Controllers
 
             _deleteToDoCommandMock.Verify(command => command.DeleteAsync(toDoId, tenantId), Times.Once);
         }
-
     }
 }

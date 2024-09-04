@@ -7,10 +7,12 @@ namespace Application.Queries
     public class GetToDoByIdQuery : IGetToDoByIdQuery
     {
         private readonly AppDbContext _context;
+
         public GetToDoByIdQuery(AppDbContext context)
         {
             _context = context;
         }
+
         public async Task<ToDo> GetByIdAsync(long id, long tenantId)
         {
             var toDo = await _context.ToDos

@@ -20,11 +20,13 @@ public class ErrorHandlerMiddleware
             Console.WriteLine($"Unhandled Exception: {ex}");
 
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
             await context.Response.WriteAsJsonAsync(new ExceptionResponse<object>
-            {
-                Success = false,
-                Message = $"An error occurred while processing your request. See the message: {ex.Message}"
-            });
+                    {
+                        Success = false,
+                        Message = $"An error occurred while processing your request. See the message: {ex.Message}",
+                    }
+                );
         }
     }
 }

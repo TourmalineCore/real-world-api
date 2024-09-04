@@ -12,17 +12,18 @@ namespace Application;
 public static class DependencyInjection
 {
     private const string DefaultConnection = "DefaultConnection";
+
     public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString(DefaultConnection);
 
         services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseNpgsql(connectionString,
-                    o => o.UseNodaTime()
-                );
-            }
-        );
+                {
+                    options.UseNpgsql(connectionString,
+                            o => o.UseNodaTime()
+                        );
+                }
+            );
         services.AddTransient<ToDoService>();
         services.AddTransient<ICreateToDoCommand, CreateToDoCommand>();
         services.AddTransient<IDeleteToDoCommand, DeleteToDoCommand>();

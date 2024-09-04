@@ -1,9 +1,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc.Filters;
-
 using OpenTelemetry.Trace;
 
 namespace TracingLibrary;
@@ -19,14 +17,13 @@ public class TracingAttribute : ActionFilterAttribute
 
     public override async Task OnActionExecutionAsync(
         ActionExecutingContext context,
-        ActionExecutionDelegate next
-    )
+        ActionExecutionDelegate next)
     {
         var noTracing = context
-        .ActionDescriptor
-        .EndpointMetadata
-        .OfType<NoTracingAttribute>()
-        .Any();
+            .ActionDescriptor
+            .EndpointMetadata
+            .OfType<NoTracingAttribute>()
+            .Any();
 
         if (noTracing)
         {
@@ -37,9 +34,9 @@ public class TracingAttribute : ActionFilterAttribute
         if (Activity.Current != null)
         {
             var headers = new AttributeContext(
-                activity: Activity.Current,
-                context: context.HttpContext
-            );
+                    activity: Activity.Current,
+                    context: context.HttpContext
+                );
 
             Activity.Current.AddTag("TraceId", headers.TraceId);
             Activity.Current.AddTag("SpanId", headers.SpanId);

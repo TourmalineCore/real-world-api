@@ -1,6 +1,5 @@
 using Serilog;
 using Serilog.Sinks.TestCorrelator;
-
 using Xunit;
 
 namespace LoggingLibrary.Tests;
@@ -15,10 +14,10 @@ public class UtcEcsTextFormatterTests
         var dummyElasticSearchPassword = "test_password";
 
         ElkLogger.SetupLogger(
-            dummyElasticSearchUri,
-            dummyElasticSearchLogin,
-            dummyElasticSearchPassword
-        );
+                dummyElasticSearchUri,
+                dummyElasticSearchLogin,
+                dummyElasticSearchPassword
+            );
 
         using (TestCorrelator.CreateContext())
         {
