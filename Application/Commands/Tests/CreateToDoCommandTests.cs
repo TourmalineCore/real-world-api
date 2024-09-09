@@ -1,0 +1,46 @@
+using Application.Requests;
+using Microsoft.EntityFrameworkCore;
+using Moq;
+using NodaTime;
+using Xunit;
+
+namespace Application.Commands.Tests
+{
+    public class CreateToDoCommandTests
+    {
+        private readonly Mock<IClock> _clockMock;
+        private readonly AppDbContext _context;
+        private readonly CreateToDoCommand _command;
+
+        public CreateToDoCommandTests()
+        {
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(databaseName: "CreateToDoCommandToDoDatabase")
+                .Options;
+
+            _context = new AppDbContext(options);
+            _clockMock = new Mock<IClock>();
+
+            _command = new CreateToDoCommand(_context, _clockMock.Object);
+        }
+
+        [Fact]
+        public async Task CreateAsync_ShouldAddNewToDoToDbSet()
+        {
+            var tenantId = 1L;
+
+            var addToDoRequest = new AddToDoRequest
+            {
+                Name = "Test ToDo",
+            };
+
+            var toDoId = await _command.CreateAsync(addToDoRequest, tenantId);
+
+            var toDo = await _context.ToDos.FindAsync(toDoId);
+            Assert.NotNull(toDo);
+            Assert.Equal("Test ToDo", toDo.Name);
+            Assert.Equal(toDoId, toDo.Id);
+            Assert.Equal(tenantId, toDo.TenantId);
+        }
+    }
+}
