@@ -1,7 +1,7 @@
 # Here you can find docs bitnami/nginx chart https://github.com/bitnami/charts/blob/main/bitnami/nginx/README.md
 
 image:
-  registry: docker.io
+  registry: ghcr.io
   repository: tourmalinecore/real-world/real-world-api
   tag: "latest"
   pullPolicy: Always
