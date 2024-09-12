@@ -39,12 +39,12 @@ service:
 ingress:
   enabled: true
   hostname: "real-world.tourmalinecore.com"
-  path: /api/to-dos-api(/|$)(.*)
+  path: /api(/|$)(.*)
   annotations:
     # redirect from http to https
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     cert-manager.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/rewrite-target: /api/to-dos-api/$2
+    nginx.ingress.kubernetes.io/rewrite-target: /to-dos-api/$2
   ingressClassName: "nginx"
   tls: true
 
