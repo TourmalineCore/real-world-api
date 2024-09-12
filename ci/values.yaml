@@ -34,7 +34,7 @@ readinessProbe:
 service:
   type: ClusterIP
   ports:
-    http: 80
+    http: 8080
 
 ingress:
   enabled: true
@@ -88,4 +88,3 @@ extraDeploy:
       {{- if .Values.extraConfigMapEnvVars }}
       {{- include "common.tplvalues.render" ( dict "value" .Values.extraConfigMapEnvVars "context" $ ) | trim | nindent 6 }}
       {{- end }}
- 
