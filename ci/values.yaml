@@ -38,7 +38,7 @@ service:
 
 ingress:
   enabled: true
-  path: /api/
+  path: /to-dos-api/
   annotations:
     # to do not redirect from http to https
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
