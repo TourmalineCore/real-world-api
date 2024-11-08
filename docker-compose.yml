@@ -3,7 +3,7 @@ services:
   api-db:
     image: postgres:14.2-alpine
     container_name: api-db
-    profiles: ['LocalEnvForDevelopment']
+    profiles: ['MockForDevelopment']
     restart: unless-stopped
     environment:
       POSTGRES_DB: api-db
@@ -14,26 +14,40 @@ services:
     networks:
       - api-network
 
-  api:
-    container_name: api
-    profiles: ['LocalEnvForDevelopment']
+  base_api:
+    build:
+      dockerfile: Api/Dockerfile
+      context: .
+    environment:
+      - AuthenticationOptions__PublicSigningKey=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsDwLnM5sbVi326YDsLvMkQLXDKVAaHrJZ/MwkoxF4Hmq4+pu4KojgQyVDtjseXG8UW5wbxW58eXG8V0XgJzsD8zQX2Z1bBawpIeD9sXf/5CFZGif85YFIqS3brqR3ScdGxYHXcwrUMGUCThxe918Q0aNXzdSxGGP2v7ZbtpFhLRyrTXHl4u6k3eyYG7zCkwextnMb9CJuCR7x1ua1V1S0xljAqg5PicFjt0vVSKzPM/Djw7XK84sJXxaet7t4cNtXVJIAyXUMsSli6gg9Cw9CEUSE40iWUR/6wrdUYAchk3vWiBhMmnufwzmFRLKHOH9Fz8buJVSrRfyt7a6S2iN+wIDAQABMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsDwLnM5sbVi326YDsLvMkQLXDKVAaHrJZ/MwkoxF4Hmq4+pu4KojgQyVDtjseXG8UW5wbxW58eXG8V0XgJzsD8zQX2Z1bBawpIeD9sXf/5CFZGif85YFIqS3brqR3ScdGxYHXcwrUMGUCThxe918Q0aNXzdSxGGP2v7ZbtpFhLRyrTXHl4u6k3eyYG7zCkwextnMb9CJuCR7x1ua1V1S0xljAqg5PicFjt0vVSKzPM/Djw7XK84sJXxaet7t4cNtXVJIAyXUMsSli6gg9Cw9CEUSE40iWUR/6wrdUYAchk3vWiBhMmnufwzmFRLKHOH9Fz8buJVSrRfyt7a6S2iN+wIDAQAB
+      - AuthenticationOptions__PrivateSigningKey=MIIEowIBAAKCAQEAsDwLnM5sbVi326YDsLvMkQLXDKVAaHrJZ/MwkoxF4Hmq4+pu4KojgQyVDtjseXG8UW5wbxW58eXG8V0XgJzsD8zQX2Z1bBawpIeD9sXf/5CFZGif85YFIqS3brqR3ScdGxYHXcwrUMGUCThxe918Q0aNXzdSxGGP2v7ZbtpFhLRyrTXHl4u6k3eyYG7zCkwextnMb9CJuCR7x1ua1V1S0xljAqg5PicFjt0vVSKzPM/Djw7XK84sJXxaet7t4cNtXVJIAyXUMsSli6gg9Cw9CEUSE40iWUR/6wrdUYAchk3vWiBhMmnufwzmFRLKHOH9Fz8buJVSrRfyt7a6S2iN+wIDAQABAoIBAQCvue/KV3p+Pex2tD8RxvDf13kfPtfOVkDlyfQw7HXwsuDXijctBfmJAEbRGzQQlHw2pmyuF3fl4DxTB4Qb1lz8FDniJoQHV0ijhgzrz7rfVffsevajKH/OX3gYjShM4GeBTqHhwWefiqZV21YtMFhrrLniq4N4FeAfeebNRg/zlWEigraxqAWb4cplnxBE3qOBECKXdF/B8uhp743BU/2HLSO5BUdhtPlN3FKoYdyqtrKyNO2z7rC+Gk8tNd+KbMHDUMiOQXzbXkpsXYKAug9iTW+gxZG/bNyzGNrJBFrUYb1fP4iZphbxBJgobNYJBKA565cAX/wI5lFakTBB0YAhAoGBAOk0TyV0dA8WJ6NrWmRUBKsKvkSREhBveW+P3LtA8a1IgQf4K6ohIfcq9w/+nRvTLPIxo67FcqEyzVUu9TOafzIi59w4RBWG/HKOZ5lvIVicbuPyclPVWyC+9bMMgWEJy9wGwE+fGh3AvAA4PXNBcjOqfT0sSF9PBUo5qN11Q/qHAoGBAMF2IL+cXgPiUta4XoMh14ksJiwHtZeMkj+kauU3rctDITSkIGMFp4q0W5UUSG1yPcW/++rMQfuAjCZotdNpbQT+g+KfG44DMT5W7nRgv60S0/6X/OoLIhCue19yLMVzFpai0YEH+s24/XNnwl53K34G1zVMCsZcIuIng8SZVintAoGAJP/1pr2pRFOBin4X418pNnIH6h0SPqVRIRA0N0mAjru4LSmE1ANZvjuE43bEOovwz6Rskegl3cmPpnpC0SMsFypOmzQaKUg3eX16lm95XPPE7EmlNgPd534kwXm0dU72lzxC+t8FZ78SlP5XUZgKpIPiRvhlqymAb1xinHBkjrUCgYAB144YRPTgNJd1U+wSc5AJzlHOuYQRHVWHJZme9RjChrEaPzXPu44M1ArLMJY/9IaCC4HqimdWbbLn6rdQfAB9u66lyb4JbB5b6Zf7o7Avha5fDjNqRxDb981U61Fhz+a3KHW2NM0+iDRhlOtU2u2fFZGXAFJZ8Saj4JxwksUvQQKBgEQ1TAW/INhWSkEW8vGeLnjV+rxOx8EJ9ftVCRaQMlDEDlX0n7BZeQrQ1pBxwL0FSTrUQdD02MsWshrhe0agKsw2Yaxn8gYs1v9HMloS4Q3L2zl8pi7R3yx72RIcdnS4rqGXeO5t8dm305Yz2RHhqtkBmpFBssSEYCY/tUDmsQVU
+    
+  docker_api:
+    container_name: docker_api
+    extends: 
+      service: base_api
+    profiles: ['MockForDevelopment']
     depends_on:
       - elasticsearch
       - api-db
       - jaeger
-    build:
-      dockerfile: Api/Dockerfile
-      context: .
+    environment:
+      - ASPNETCORE_ENVIRONMENT=MockForDevelopment
     ports:
       - 10001:8080
-    environment:
-      - ASPNETCORE_ENVIRONMENT=LocalEnvForDevelopment
-      - ConnectionStrings__DefaultConnection=User ID=postgres;Password=postgres;Host=api-db;port=5432;Database=api-db
-      - AuthenticationOptions__PublicSigningKey=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsDwLnM5sbVi326YDsLvMkQLXDKVAaHrJZ/MwkoxF4Hmq4+pu4KojgQyVDtjseXG8UW5wbxW58eXG8V0XgJzsD8zQX2Z1bBawpIeD9sXf/5CFZGif85YFIqS3brqR3ScdGxYHXcwrUMGUCThxe918Q0aNXzdSxGGP2v7ZbtpFhLRyrTXHl4u6k3eyYG7zCkwextnMb9CJuCR7x1ua1V1S0xljAqg5PicFjt0vVSKzPM/Djw7XK84sJXxaet7t4cNtXVJIAyXUMsSli6gg9Cw9CEUSE40iWUR/6wrdUYAchk3vWiBhMmnufwzmFRLKHOH9Fz8buJVSrRfyt7a6S2iN+wIDAQABMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsDwLnM5sbVi326YDsLvMkQLXDKVAaHrJZ/MwkoxF4Hmq4+pu4KojgQyVDtjseXG8UW5wbxW58eXG8V0XgJzsD8zQX2Z1bBawpIeD9sXf/5CFZGif85YFIqS3brqR3ScdGxYHXcwrUMGUCThxe918Q0aNXzdSxGGP2v7ZbtpFhLRyrTXHl4u6k3eyYG7zCkwextnMb9CJuCR7x1ua1V1S0xljAqg5PicFjt0vVSKzPM/Djw7XK84sJXxaet7t4cNtXVJIAyXUMsSli6gg9Cw9CEUSE40iWUR/6wrdUYAchk3vWiBhMmnufwzmFRLKHOH9Fz8buJVSrRfyt7a6S2iN+wIDAQAB
-      - AuthenticationOptions__PrivateSigningKey=MIIEowIBAAKCAQEAsDwLnM5sbVi326YDsLvMkQLXDKVAaHrJZ/MwkoxF4Hmq4+pu4KojgQyVDtjseXG8UW5wbxW58eXG8V0XgJzsD8zQX2Z1bBawpIeD9sXf/5CFZGif85YFIqS3brqR3ScdGxYHXcwrUMGUCThxe918Q0aNXzdSxGGP2v7ZbtpFhLRyrTXHl4u6k3eyYG7zCkwextnMb9CJuCR7x1ua1V1S0xljAqg5PicFjt0vVSKzPM/Djw7XK84sJXxaet7t4cNtXVJIAyXUMsSli6gg9Cw9CEUSE40iWUR/6wrdUYAchk3vWiBhMmnufwzmFRLKHOH9Fz8buJVSrRfyt7a6S2iN+wIDAQABAoIBAQCvue/KV3p+Pex2tD8RxvDf13kfPtfOVkDlyfQw7HXwsuDXijctBfmJAEbRGzQQlHw2pmyuF3fl4DxTB4Qb1lz8FDniJoQHV0ijhgzrz7rfVffsevajKH/OX3gYjShM4GeBTqHhwWefiqZV21YtMFhrrLniq4N4FeAfeebNRg/zlWEigraxqAWb4cplnxBE3qOBECKXdF/B8uhp743BU/2HLSO5BUdhtPlN3FKoYdyqtrKyNO2z7rC+Gk8tNd+KbMHDUMiOQXzbXkpsXYKAug9iTW+gxZG/bNyzGNrJBFrUYb1fP4iZphbxBJgobNYJBKA565cAX/wI5lFakTBB0YAhAoGBAOk0TyV0dA8WJ6NrWmRUBKsKvkSREhBveW+P3LtA8a1IgQf4K6ohIfcq9w/+nRvTLPIxo67FcqEyzVUu9TOafzIi59w4RBWG/HKOZ5lvIVicbuPyclPVWyC+9bMMgWEJy9wGwE+fGh3AvAA4PXNBcjOqfT0sSF9PBUo5qN11Q/qHAoGBAMF2IL+cXgPiUta4XoMh14ksJiwHtZeMkj+kauU3rctDITSkIGMFp4q0W5UUSG1yPcW/++rMQfuAjCZotdNpbQT+g+KfG44DMT5W7nRgv60S0/6X/OoLIhCue19yLMVzFpai0YEH+s24/XNnwl53K34G1zVMCsZcIuIng8SZVintAoGAJP/1pr2pRFOBin4X418pNnIH6h0SPqVRIRA0N0mAjru4LSmE1ANZvjuE43bEOovwz6Rskegl3cmPpnpC0SMsFypOmzQaKUg3eX16lm95XPPE7EmlNgPd534kwXm0dU72lzxC+t8FZ78SlP5XUZgKpIPiRvhlqymAb1xinHBkjrUCgYAB144YRPTgNJd1U+wSc5AJzlHOuYQRHVWHJZme9RjChrEaPzXPu44M1ArLMJY/9IaCC4HqimdWbbLn6rdQfAB9u66lyb4JbB5b6Zf7o7Avha5fDjNqRxDb981U61Fhz+a3KHW2NM0+iDRhlOtU2u2fFZGXAFJZ8Saj4JxwksUvQQKBgEQ1TAW/INhWSkEW8vGeLnjV+rxOx8EJ9ftVCRaQMlDEDlX0n7BZeQrQ1pBxwL0FSTrUQdD02MsWshrhe0agKsw2Yaxn8gYs1v9HMloS4Q3L2zl8pi7R3yx72RIcdnS4rqGXeO5t8dm305Yz2RHhqtkBmpFBssSEYCY/tUDmsQVU
     networks:
       - api-network
       - realworld-external
+
+  local_env_api:
+    container_name: local_env_api
+    extends: 
+      service: base_api
+    profiles: ['LocalEnvForDevelopment']
+    environment:
+      - ASPNETCORE_ENVIRONMENT=LocalEnvForDevelopment
+    ports:
+      - 10002:8080
   
   setup:
     image: elasticsearch:8.12.1
